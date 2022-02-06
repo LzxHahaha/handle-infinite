@@ -1,0 +1,60 @@
+.history-row {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: space-around;
+    margin: 10px 0;
+}
+
+.word {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.pinyin {
+    display: grid;
+    grid-template-rows: 2px 14px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.pinyin .all {
+    color: green;
+}
+
+.pinyin .val {
+    color: orange;
+}
+
+.pinyin .no {
+    color: red;
+}
+
+.tone {
+    font-size: 20px;
+}
+
+.char {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    margin-top: 5px;
+}
+
+.char.all {
+    background-color: green;
+    color: white;
+}
+
+.char.val {
+    background-color: orange;
+    color: white;
+}
+
+.char.no {
+    background-color: grey;
+}
