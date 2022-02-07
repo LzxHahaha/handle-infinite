@@ -9,8 +9,9 @@ import { WordInfo } from './wordInfo';
 export const RETRY_TIMES = 10;
 const ANS_LENGTH = 4;
 
-const IDIOMS = cnchar.idiom(['', '', '', '']).filter(el => el.length === ANS_LENGTH);
-const IDIOMS_COUNT = IDIOMS.length;
+const ALL_IDIOMS = cnchar.idiom(['', '', '', '']).filter(el => el.length === ANS_LENGTH);
+let IDIOMS = window.basic_idioms || ALL_IDIOMS;
+let IDIOMS_COUNT = IDIOMS.length;
 
 export const MatchStatus = {
     UNKNOWN: '',
@@ -18,6 +19,17 @@ export const MatchStatus = {
     VAL: 'VAL',
     ALL: 'ALL'
 };
+
+export const updateIdiomSet = (allIdioms) => {
+    if (!allIdioms && window.BASIC_IDIOMS) {
+        IDIOMS = window.BASIC_IDIOMS;
+    } else {
+        IDIOMS = ALL_IDIOMS;
+    }
+    IDIOMS_COUNT = IDIOMS.length;
+};
+
+export const getCount = () => IDIOMS_COUNT;
 
 export const getSpell = (word) => {
     return pinyin(word, {

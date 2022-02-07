@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import cnchar from 'cnchar';
 
-import { useGameData, RETRY_TIMES, getSpell } from '../utils/gameData';
+import { useGameData, RETRY_TIMES, getSpell, updateIdiomSet, getCount } from '../utils/gameData';
 
 import Data, { LIST_END_ID } from './Data';
 
@@ -13,6 +13,7 @@ const Game = () => {
     const data = useGameData();
     const [input, setInput] = useState('');
     const [spell, setSpell] = useState('');
+    const [allMode, setAllMode] = useState(false);
 
     const scrollToEnd = useCallback(() => {
         setTimeout(() => {
@@ -72,6 +73,11 @@ const Game = () => {
         }
     }, [input, data, spell]);
 
+    useEffect(() => {
+        updateIdiomSet(allMode);
+        random();
+    }, [allMode, random]);
+
     return (
         <div className="game">
             <div className="game-pane">
@@ -88,6 +94,16 @@ const Game = () => {
                     <span className="rule-tag" style={{ color: 'orange' }}>黄色</span>: 位置错误
                     <br />
                     <span className="rule-tag" style={{ color: 'lightgray' }}>灰色</span>: 完全错误
+                </div>
+
+                <hr />
+
+                <div className="data-set">
+                    当前词库：
+                    <br />
+                    <span>{allMode ? '高级' : '常用'}词库 ({getCount()}词)</span>
+                    <br/>
+                    <button onClick={() => setAllMode(v => !v)}>切换</button>
                 </div>
 
                 <hr/>
