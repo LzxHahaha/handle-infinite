@@ -2,7 +2,7 @@
   "name": "handle-infinite",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://cdn.jsdelivr.net/gh/LzxHahaha/handle-infinite@gh-page",
+  "homepage": ".",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.1.2",
