@@ -11,6 +11,8 @@ const statusClass = {
     [MatchStatus.NO]: 'no'
 }
 
+export const LIST_END_ID = "data_list_footer";
+
 const updatePinyinChar = (ch, index, toneIndex) => {
     if (toneIndex !== index) {
         return ch;
@@ -77,6 +79,7 @@ const Data = ({ data }) => {
                 <div className="char no">?</div>
                 <div className="char no">?</div>
                 <div className="char no">?</div>
+                <div id={LIST_END_ID}>{' '}</div>
             </div>
         );
     }
@@ -85,6 +88,7 @@ const Data = ({ data }) => {
             {data.history.map((el, index) => (
                 <MatchItem key={`${el.input}-${index}`} data={el} />
             ))}
+            <div id={LIST_END_ID}>{' '}</div>
         </div>
     )
 };

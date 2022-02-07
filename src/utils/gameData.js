@@ -19,11 +19,15 @@ export const MatchStatus = {
     ALL: 'ALL'
 };
 
-const getSpellInfoList = (word) => {
+export const getSpell = (word) => {
     return pinyin(word, {
         heteronym: true,
         segment: true
-    }).map(el => cnchar.spellInfo(el[0]));
+    }).map(el => el[0]);
+};
+
+const getSpellInfoList = (word) => {
+    return getSpell(word).map(el => cnchar.spellInfo(el));
 };
 
 export const useGameData = () => {
