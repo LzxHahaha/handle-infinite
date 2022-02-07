@@ -57,6 +57,7 @@ export const useGameData = () => {
                 setSpellInfo(initSpellInfo);
                 setAnsInfo(initAnsInfo);
                 setHistory([]);
+                setIsOver(false);
                 break;
             } catch (e) {
                 console.error(initAns, e);
@@ -167,7 +168,7 @@ export const useGameData = () => {
 
     useEffect(() => {
         let over = !!history.length && (
-            history.length === RETRY_TIMES || history[history.length - 1].success
+            history.length >= RETRY_TIMES || history[history.length - 1].success
         );
         if (over !== isOver) {
             setIsOver(over);

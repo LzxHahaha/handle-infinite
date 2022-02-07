@@ -55,8 +55,15 @@ const Game = () => {
                 <button onClick={() => hint()}>提示</button>
                 <button onClick={() => data.stop()}>查看答案</button>
             </div>
+            <div className="rule">
+                <span className="rule-tag" style={{ color: 'green' }}>绿色</span>: 完全正确
+                <span className="rule-split" />
+                <span className="rule-tag" style={{ color: 'orange' }}>黄色</span>: 位置错误
+                <span className="rule-split" />
+                <span className="rule-tag" style={{ color: 'lightgray' }}>灰色</span>: 完全错误
+            </div>
 
-            <h4>
+            <h4 className="ans">
                 {data.isOver
                     ? `游戏结束，答案：${data.answer}`
                     : `剩余次数：${RETRY_TIMES - data.history.length}`}
