@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from 'react';
 import cnchar from 'cnchar';
 import 'cnchar-idiom';
 import 'cnchar-poly';
+import pinyin from 'pinyin';
 
 import { WordInfo } from './wordInfo';
 
@@ -19,7 +20,10 @@ export const MatchStatus = {
 };
 
 const getSpellInfoList = (word) => {
-    return cnchar.spell(word, 'tone', 'array', 'low').map(el => cnchar.spellInfo(el));
+    return pinyin(word, {
+        heteronym: true,
+        segment: true
+    }).map(el => cnchar.spellInfo(el[0]));
 };
 
 export const useGameData = () => {
