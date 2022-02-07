@@ -14,7 +14,7 @@ const Game = () => {
     const [input, setInput] = useState('');
     const [spell, setSpell] = useState('');
 
-    const scollToEnd = useCallback(() => {
+    const scrollToEnd = useCallback(() => {
         setTimeout(() => {
             const end = document.getElementById(LIST_END_ID);
             end && end.scrollIntoView(true);
@@ -42,17 +42,17 @@ const Game = () => {
         try {
             data.match(input);
             setInput('');
-            scollToEnd();
+            scrollToEnd();
         } catch (e) {
             console.error(e);
             window.alert(e.message);
         }
-    }, [input, data]);
+    }, [input, data, scrollToEnd]);
 
     const stop = useCallback(() => {
         data.stop();
-        scollToEnd();
-    }, [data]);
+        scrollToEnd();
+    }, [data, scrollToEnd]);
 
     const submitKeyDown = useCallback(e => {
         if (e.key.toLocaleLowerCase() === 'enter') {
@@ -70,7 +70,7 @@ const Game = () => {
         if (nextVal !== spell) {
             setSpell(nextVal);
         }
-    }, [input, data]);
+    }, [input, data, spell]);
 
     return (
         <div className="game">
