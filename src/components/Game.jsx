@@ -32,6 +32,13 @@ const Game = () => {
         data.init();
     }, [data]);
 
+    const switchSet = useCallback(() => {
+        const v = !allMode;
+        updateIdiomSet(v);
+        setAllMode(v);
+        random();
+    }, [random, allMode]);
+
     const submitInput = useCallback(() => {
         if (!input) {
             return;
@@ -73,11 +80,6 @@ const Game = () => {
         }
     }, [input, data, spell]);
 
-    useEffect(() => {
-        updateIdiomSet(allMode);
-        random();
-    }, [allMode, random]);
-
     return (
         <div className="game">
             <div className="game-pane">
@@ -103,7 +105,7 @@ const Game = () => {
                     <br />
                     <span>{allMode ? '高级' : '常用'}词库 ({getCount()}词)</span>
                     <br/>
-                    <button onClick={() => setAllMode(v => !v)}>切换</button>
+                    <button onClick={switchSet}>切换</button>
                 </div>
 
                 <hr/>
