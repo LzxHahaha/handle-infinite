@@ -61,24 +61,27 @@ const Char = ({ text, status }) => {
 };
 
 const MatchItem = ({ data }) => {
-    return (
-        <div className="history-row">
-            {data.result.map((el, index) => (
-                <div key={`${data.input[index]}-${index}`} className="word">
-                    <Pinyin status={el} />
-                    <Char text={data.input[index]} status={el.text} />
-                </div>
-            ))}
+    return data.result.map((el, index) => (
+        <div key={`${data.input[index]}-${index}`} className="word">
+            <Pinyin status={el} />
+            <Char text={data.input[index]} status={el.text} />
         </div>
-    );
+    ));
 };
 
 const Data = ({ data }) => {
-    if (!data) {
-        return null;
+    if (!data || !data.history.length) {
+        return (
+            <div className="list">
+                <div className="char no">?</div>
+                <div className="char no">?</div>
+                <div className="char no">?</div>
+                <div className="char no">?</div>
+            </div>
+        );
     }
     return (
-        <div>
+        <div className="list">
             {data.history.map((el, index) => (
                 <MatchItem key={`${el.input}-${index}`} data={el} />
             ))}

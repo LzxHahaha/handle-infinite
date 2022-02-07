@@ -1,0 +1,31 @@
+.bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 5px 10px;
+    background-color: rgb(0, 122, 204);
+}
+
+.source::before {
+    content: 'Github';
+}
+
+.source:hover::before {
+    content: '查看源码';
+}
+
+.link {
+    font-size: 14px;
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+.link + .link {
+    margin-left: 25px;
+}

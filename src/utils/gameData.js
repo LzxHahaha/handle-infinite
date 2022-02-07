@@ -5,11 +5,10 @@ import 'cnchar-poly';
 
 import { WordInfo } from './wordInfo';
 
-const RETRY_TIMES = 12;
+export const RETRY_TIMES = 10;
 const ANS_LENGTH = 4;
 
 const IDIOMS = cnchar.idiom(['', '', '', '']).filter(el => el.length === ANS_LENGTH);
-const IDIOMS_SET = new Set(IDIOMS);
 const IDIOMS_COUNT = IDIOMS.length;
 
 export const MatchStatus = {
@@ -123,7 +122,15 @@ export const useGameData = () => {
     }, [ans, ansInfo, spellInfo]);
 
     const validate = useCallback((input) => {
-        return input && input.length === 4 && IDIOMS_SET.has(input);
+        if (!input || input.length !== 4) {
+            return false;
+        }
+        try {
+            getSpellInfoList(input);
+            return true;
+        } catch (e) {
+            return false;
+        }
     }, []);
 
     const match = useCallback((input) => {
@@ -141,6 +148,10 @@ export const useGameData = () => {
     const restart = useCallback(() => {
         setHistory([]);
     }, []);
+
+    const stop = () => {
+        match(ans);
+    };
 
     useEffect(() => {
         const url = new URL(window.location);
@@ -167,6 +178,7 @@ export const useGameData = () => {
         init,
         match,
         validate,
-        restart
+        restart,
+        stop
     };
 }
