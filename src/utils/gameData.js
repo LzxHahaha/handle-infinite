@@ -151,6 +151,7 @@ export const useGameData = () => {
     }, [ans, isOver, matchResult]);
 
     const restart = useCallback(() => {
+        setIsOver(false);
         setHistory([]);
     }, []);
 
