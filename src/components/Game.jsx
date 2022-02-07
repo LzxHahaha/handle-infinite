@@ -41,7 +41,7 @@ const Game = () => {
     }, [submitInput]);
 
     return (
-        <div>
+        <div className="game-container">
             <div>
                 <button onClick={() => random()}>随机一题</button>
                 <button onClick={() => data.restart()}>重新开始</button>
