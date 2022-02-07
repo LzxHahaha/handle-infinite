@@ -7,6 +7,22 @@
   flex-direction: row;
 }
 
+.rule {
+  font-size: 12px;
+}
+
+.rule-tag {
+  font-weight: bold;
+}
+
+.rule-split {
+  margin-left: 10px;
+}
+
+.ans {
+  margin: 5px 0;
+}
+
 button {
   border: none;
   outline: none;
