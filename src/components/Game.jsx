@@ -5,11 +5,18 @@ import Data from './Data';
 
 import './Game.css';
 
+let hintIndex = 0;
+
 const Game = () => {
     const data = useGameData();
     const [input, setInput] = useState('');
 
+    const hint = useCallback(() => {
+        window.alert(`当前词语包含：${data.answer[hintIndex]}`);
+    }, [data]);
+
     const random = useCallback(() => {
+        hintIndex = Math.floor(Math.random() * 10) % 4;
         setInput('');
         data.init();
     }, [data]);
@@ -42,9 +49,10 @@ const Game = () => {
 
     return (
         <div className="game-container">
-            <div>
+            <div className="game-header">
                 <button onClick={() => random()}>随机一题</button>
                 <button onClick={() => data.restart()}>重新开始</button>
+                <button onClick={() => hint()}>提示</button>
                 <button onClick={() => data.stop()}>查看答案</button>
             </div>
 

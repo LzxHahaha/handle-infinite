@@ -2,6 +2,11 @@
   padding-bottom: 50px;
 }
 
+.game-header {
+  display: flex;
+  flex-direction: row;
+}
+
 button {
   border: none;
   outline: none;
