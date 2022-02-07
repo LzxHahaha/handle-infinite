@@ -4,13 +4,15 @@ import 'cnchar-idiom';
 import 'cnchar-poly';
 import pinyin from 'pinyin';
 
+import { BASIC_IDIOMS } from "./idiom";
+
 import { WordInfo } from './wordInfo';
 
 export const RETRY_TIMES = 10;
 const ANS_LENGTH = 4;
 
 const ALL_IDIOMS = cnchar.idiom(['', '', '', '']).filter(el => el.length === ANS_LENGTH);
-let IDIOMS = window.basic_idioms || ALL_IDIOMS;
+let IDIOMS = BASIC_IDIOMS;
 let IDIOMS_COUNT = IDIOMS.length;
 
 export const MatchStatus = {
@@ -21,11 +23,7 @@ export const MatchStatus = {
 };
 
 export const updateIdiomSet = (allIdioms) => {
-    if (!allIdioms && window.BASIC_IDIOMS) {
-        IDIOMS = window.BASIC_IDIOMS;
-    } else {
-        IDIOMS = ALL_IDIOMS;
-    }
+    IDIOMS = allIdioms ? ALL_IDIOMS : BASIC_IDIOMS;
     IDIOMS_COUNT = IDIOMS.length;
 };
 
