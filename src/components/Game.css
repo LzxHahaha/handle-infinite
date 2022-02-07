@@ -32,6 +32,14 @@
   margin-left: 10px;
 }
 
+.data-set {
+  font-size: 14px;
+}
+
+.data-set > span {
+  font-size: 12px;
+}
+
 .ans {
   margin: 5px 0;
 }
