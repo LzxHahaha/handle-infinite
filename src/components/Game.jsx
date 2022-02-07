@@ -73,9 +73,8 @@ const Game = () => {
 
             <div>
                 <input
-                    value={data.isOver ? "" : input}
+                    value={input}
                     placeholder="请输入四字词语"
-                    disabled={data.isOver}
                     maxLength={4}
                     onChange={e => setInput(e.target.value)}
                     onKeyDown={submitKeyDown}
@@ -84,7 +83,7 @@ const Game = () => {
                     disabled={!input || data.isOver}
                     onClick={submitInput}
                 >
-                    确认
+                    {data.isOver ? '游戏结束' : '确认'}
                 </button>
             </div>
         </div>
