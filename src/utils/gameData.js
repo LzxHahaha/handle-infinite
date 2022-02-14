@@ -19,7 +19,9 @@ export const MatchStatus = {
     UNKNOWN: '',
     NO: 'NO',
     VAL: 'VAL',
-    ALL: 'ALL'
+    ALL: 'ALL',
+    CONTAIN: 'CONTAIN',
+    NOT_CONTAIN: 'NOT_CONTAIN'
 };
 
 export const updateIdiomSet = (allIdioms) => {
@@ -31,13 +33,15 @@ export const getCount = () => IDIOMS_COUNT;
 
 export const getSpell = (word) => {
     return pinyin(word, {
-        heteronym: true,
         segment: true
     }).map(el => el[0]);
 };
 
-const getSpellInfoList = (word) => {
-    return getSpell(word).map(el => cnchar.spellInfo(el));
+export const getSpellInfoList = (word) => {
+    return getSpell(word).map(el => ({
+        ...cnchar.spellInfo(el),
+        raw: el
+    }));
 };
 
 export const useGameData = () => {
@@ -46,8 +50,13 @@ export const useGameData = () => {
     const [spellInfo, setSpellInfo] = useState(null);
     const [history, setHistory] = useState([]);
     const [isOver, setIsOver] = useState(false);
+    const [inputSpellSet, setInputSpellSet] = useState({
+        initial: {},
+        final: {},
+        tone: {}
+    });
 
-    const init = useCallback((seed, urlAnswer) => {
+    const init = useCallback(() => {
         let seedIndex = Math.floor(Math.random() * 100 * IDIOMS_COUNT) % IDIOMS_COUNT;
         let initAns = IDIOMS[seedIndex];
 
@@ -62,6 +71,11 @@ export const useGameData = () => {
                 setAnsInfo(initAnsInfo);
                 setHistory([]);
                 setIsOver(false);
+                setInputSpellSet({
+                    initial: {},
+                    final: {},
+                    tone: {}
+                })
                 break;
             } catch (e) {
                 console.error(initAns, e);
@@ -76,10 +90,16 @@ export const useGameData = () => {
         const clonedAnsInfo = ansInfo.clone();
         const inputSpellInfo = getSpellInfoList(input);
         const res = [];
+        const iniSet = { ...inputSpellSet.initial };
+        const finSet = { ...inputSpellSet.final };
+        const tonSet = { ...inputSpellSet.tone };
 
         for (let i = 0; i < ANS_LENGTH; ++i) {
             const inCh = input[i];
             const inSp = inputSpellInfo[i];
+            iniSet[inSp.initial] = iniSet[inSp.initial] || MatchStatus.NOT_CONTAIN;
+            finSet[inSp.final] = finSet[inSp.final] || MatchStatus.NOT_CONTAIN;
+            tonSet[inSp.tone] = tonSet[inSp.tone] || MatchStatus.NOT_CONTAIN;
             if (inCh === ans[i]) {
                 res.push({
                     done: true,
@@ -90,6 +110,9 @@ export const useGameData = () => {
                     rawSpell: inSp
                 });
                 clonedAnsInfo.removeChar(inCh, inSp, i);
+                iniSet[inSp.initial] = MatchStatus.CONTAIN;
+                finSet[inSp.final] = MatchStatus.CONTAIN;
+                tonSet[inSp.tone] = MatchStatus.CONTAIN;
                 continue;
             }
             const ansSp = spellInfo[i];
@@ -104,14 +127,17 @@ export const useGameData = () => {
             if (inSp.initial === ansSp.initial) {
                 status.initial = MatchStatus.ALL;
                 clonedAnsInfo.removeSpellInitial(inSp.initial, i);
+                iniSet[inSp.initial] = MatchStatus.CONTAIN;
             }
             if (inSp.final === ansSp.final) {
                 status.final = MatchStatus.ALL;
                 clonedAnsInfo.removeSpellFinal(inSp.final, i);
+                finSet[inSp.final] = MatchStatus.CONTAIN;
             }
             if (inSp.tone === ansSp.tone) {
                 status.tone = MatchStatus.ALL;
                 clonedAnsInfo.removeSpellTone(inSp.tone, i);
+                tonSet[inSp.tone] = MatchStatus.CONTAIN;
             }
             res.push(status);
         }
@@ -121,14 +147,35 @@ export const useGameData = () => {
                 continue;
             }
             status.text = status.text || (clonedAnsInfo.tryRemoveChar(input[i]) ? MatchStatus.VAL : MatchStatus.NO);
-            status.initial = status.initial || (clonedAnsInfo.tryRemoveSpellInitial(status.rawSpell.initial) ? MatchStatus.VAL : MatchStatus.NO);
-            status.final = status.final || (clonedAnsInfo.tryRemoveSpellFinal(status.rawSpell.final) ? MatchStatus.VAL : MatchStatus.NO);
-            status.tone = status.tone || (clonedAnsInfo.tryRemoveSpellTone(status.rawSpell.tone) ? MatchStatus.VAL : MatchStatus.NO);
+            if (!status.initial) {
+                if (clonedAnsInfo.tryRemoveSpellInitial(status.rawSpell.initial)) {
+                    status.initial = MatchStatus.VAL;
+                    iniSet[status.rawSpell.initial] = MatchStatus.CONTAIN;
+                } else {
+                    status.initial = MatchStatus.NO;
+                }
+            }
+            if (!status.final) {
+                if (clonedAnsInfo.tryRemoveSpellFinal(status.rawSpell.final)) {
+                    status.final = MatchStatus.VAL;
+                    finSet[status.rawSpell.final] = MatchStatus.CONTAIN;
+                } else {
+                    status.final = MatchStatus.NO;
+                }
+            }
+            if (!status.tone) {
+                if (clonedAnsInfo.tryRemoveSpellTone(status.rawSpell.tone)) {
+                    status.tone = MatchStatus.VAL;
+                    tonSet[status.rawSpell.tone] = MatchStatus.CONTAIN;
+                } else {
+                    status.tone = MatchStatus.NO;
+                }
+            }
             status.done = true;
         }
 
-        return res;
-    }, [ans, ansInfo, spellInfo]);
+        return { res, iniSet, finSet, tonSet };
+    }, [ans, ansInfo, spellInfo, inputSpellSet]);
 
     const validate = useCallback((input) => {
         if (!input || input.length !== 4) {
@@ -147,11 +194,17 @@ export const useGameData = () => {
             return;
         }
 
+        const { res, iniSet, finSet, tonSet } = matchResult(input);
         setHistory(prev => prev.concat({
             success: input === ans,
             input,
-            result: matchResult(input)
+            result: res
         }));
+        setInputSpellSet({
+            initial: iniSet,
+            final: finSet,
+            tone: tonSet
+        });
     }, [ans, isOver, matchResult]);
 
     const restart = useCallback(() => {
@@ -183,6 +236,9 @@ export const useGameData = () => {
     return {
         answer: ans,
         spellInfo,
+        inputInitialSet: inputSpellSet.initial,
+        inputFinalSet: inputSpellSet.final,
+        inputToneSet: inputSpellSet.tone,
         history,
         isOver,
         init,

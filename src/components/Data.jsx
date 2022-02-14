@@ -8,7 +8,9 @@ const toneChar = ['', 'ˉ', 'ˊ', 'ˇ', 'ˋ'];
 const statusClass = {
     [MatchStatus.ALL]: 'all',
     [MatchStatus.VAL]: 'val',
-    [MatchStatus.NO]: 'no'
+    [MatchStatus.NO]: 'no',
+    [MatchStatus.CONTAIN]: 'contain',
+    [MatchStatus.NOT_CONTAIN]: 'notcontain',
 }
 
 export const LIST_END_ID = "data_list_footer";
