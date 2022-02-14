@@ -26,7 +26,7 @@ const updatePinyinChar = (ch, index, toneIndex) => {
     return ch;
 };
 
-const Pinyin = ({ status }) => {
+export const Pinyin = ({ status }) => {
     const { initial, final, tone, rawSpell } = status;
     const style = {
         gridTemplateColumns: `repeat(${rawSpell.spell.length}, 12px)`
@@ -54,7 +54,7 @@ const Pinyin = ({ status }) => {
     );
 };
 
-const Char = ({ text, status }) => {
+export const Char = ({ text, status }) => {
     return (
         <div className={`char ${statusClass[status]}`}>
             {text}

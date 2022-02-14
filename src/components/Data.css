@@ -3,6 +3,7 @@
     grid-template-columns: repeat(4,  1fr);
     margin-bottom: 5px;
     overflow-x: auto;
+    grid-gap: 10px;
 }
 
 .word {
@@ -32,6 +33,7 @@
 
 .tone {
     font-size: 20px;
+    line-height: 26px;
 }
 
 .char {
