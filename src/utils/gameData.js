@@ -75,7 +75,7 @@ export const useGameData = () => {
                     initial: {},
                     final: {},
                     tone: {}
-                })
+                });
                 break;
             } catch (e) {
                 console.error(initAns, e);
@@ -210,6 +210,11 @@ export const useGameData = () => {
     const restart = useCallback(() => {
         setIsOver(false);
         setHistory([]);
+        setInputSpellSet({
+            initial: {},
+            final: {},
+            tone: {}
+        });
     }, []);
 
     const stop = () => {
