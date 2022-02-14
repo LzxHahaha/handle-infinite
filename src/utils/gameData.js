@@ -48,19 +48,9 @@ export const useGameData = () => {
     const [isOver, setIsOver] = useState(false);
 
     const init = useCallback((seed, urlAnswer) => {
-        let seedIndex = 0;
-        let initAns = '';
-        if (urlAnswer && urlAnswer.length === ANS_LENGTH) {
-            initAns = urlAnswer;
-        } else {
-            seedIndex = +seed;
-            if (seed == null || isNaN(seedIndex)) {
-                seedIndex = Math.floor(Math.random() * 100 * IDIOMS_COUNT) % IDIOMS_COUNT;
-            } else {
-                seedIndex = Math.abs(seedIndex) % IDIOMS_COUNT;
-            }
-            initAns = IDIOMS[seedIndex];
-        }
+        let seedIndex = Math.floor(Math.random() * 100 * IDIOMS_COUNT) % IDIOMS_COUNT;
+        let initAns = IDIOMS[seedIndex];
+
         let retry = 0;
         while (retry < 10) {
             try {
