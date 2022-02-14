@@ -15,12 +15,13 @@ import {
 import {
   useGameData,
   RETRY_TIMES,
-  getSpell,
+  getSpellInfoList,
   updateIdiomSet,
   getCount,
+  MatchStatus,
 } from "../utils/gameData";
 
-import Data, { LIST_END_ID } from "./Data";
+import Data, { LIST_END_ID, Pinyin } from "./Data";
 
 import "./Game.css";
 
@@ -30,11 +31,12 @@ const Game = () => {
   const data = useGameData();
   const inputRef = useRef();
   const [input, setInput] = useState("");
-  const [spell, setSpell] = useState("");
+  const [spell, setSpell] = useState({});
   const [drawer, setDrawer] = useState(false);
   const [about, setAbout] = useState(false);
   const [settingVisible, setSettingVisible] = useState(false);
   const [allMode, setAllMode] = useState(false);
+  const [enableInputColor, setEnableInputColor] = useState(true);
 
   const scrollToEnd = useCallback(() => {
     setTimeout(() => {
@@ -114,14 +116,25 @@ const Game = () => {
   }, []);
 
   useEffect(() => {
-    let nextVal = "";
-    const text = input
+    const word = input
       .split("")
       .filter((el) => cnchar.isCnChar(el))
+      .slice(0, 4)
       .join("");
-    nextVal = getSpell(text).join(" ");
-    if (nextVal !== spell) {
-      setSpell(nextVal);
+    const val = getSpellInfoList(word);
+    let spellTextArr = [];
+    const info = val.map((el) => {
+      spellTextArr.push(el.raw);
+      return {
+        tone: data.inputToneSet[el.tone] || MatchStatus.NO,
+        initial: data.inputInitialSet[el.initial] || MatchStatus.NO,
+        final: data.inputFinalSet[el.final] || MatchStatus.NO,
+        rawSpell: el,
+      };
+    });
+    const text = spellTextArr.join(" ");
+    if (text !== spell.text) {
+      setSpell({ text, info });
     }
   }, [input, data, spell]);
 
@@ -157,7 +170,14 @@ const Game = () => {
 
         <Data data={data} />
 
-        <div className="spell">{spell || " "}</div>
+        <div className="spell">
+          {enableInputColor ? (spell.info || []).map((el, index) => (
+            <>
+              <Pinyin key={index} status={el} />
+              &emsp;
+            </>
+          )) : spell.text}
+        </div>
         <div>
           <Input.Search
             ref={inputRef}
@@ -234,10 +254,21 @@ const Game = () => {
         footer={null}
         onCancel={() => setSettingVisible(false)}
       >
-        <div className="data-set">
+        <div className="setting-field">
           当前词库：
           {allMode ? "高级" : "常用"}词库 ({getCount()}词)&emsp;
           <Button shape="round" size="small" onClick={switchSet}>
+            切换
+          </Button>
+        </div>
+
+        <div className="setting-field">
+          输入色彩辅助：已{enableInputColor ? "开启" : "关闭"}&emsp;
+          <Button
+            shape="round"
+            size="small"
+            onClick={() => setEnableInputColor((v) => !v)}
+          >
             切换
           </Button>
         </div>
@@ -265,18 +296,10 @@ const Game = () => {
             答案
           </Button>
           <Divider />
-          <Button
-            onClick={openSetting}
-            icon={<SettingOutlined />}
-            block
-          >
+          <Button onClick={openSetting} icon={<SettingOutlined />} block>
             设置
           </Button>
-          <Button
-            onClick={openAbout}
-            icon={<QuestionOutlined />}
-            block
-          >
+          <Button onClick={openAbout} icon={<QuestionOutlined />} block>
             关于
           </Button>
         </div>

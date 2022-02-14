@@ -33,12 +33,8 @@
   margin-left: 10px;
 }
 
-.data-set {
-  font-size: 14px;
-}
-
-.data-set > span {
-  font-size: 12px;
+.setting-field {
+  margin-bottom: 5px;
 }
 
 .ans {
@@ -50,8 +46,9 @@
 }
 
 .spell {
-  line-height: 22px;
-  height: 22px;
+  display: flex;
+  flex-direction: row;
+  height: 28px;
 }
 
 .source::before {
