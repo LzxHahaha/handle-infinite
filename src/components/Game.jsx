@@ -111,7 +111,7 @@ const Game = () => {
   const openSetting = useCallback(() => {
     setSettingVisible(true);
     setDrawer(false);
-  })
+  }, []);
 
   useEffect(() => {
     let nextVal = "";
